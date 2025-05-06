@@ -19,6 +19,14 @@ public class Vehicule
         return nbPassagersMax;
     }
 
+    public long getPrixAchat() {
+        return prixAchat;
+    }
+
+    public int getKmAuCompteur() {
+        return kmAuCompteur;
+    }
+
     public void setNbPassagersMax(int nbPassagersMax)
     {
         this.nbPassagersMax = nbPassagersMax;
