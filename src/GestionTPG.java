@@ -42,18 +42,48 @@ public class GestionTPG {
         System.out.println("Le total de prix d'achat est : " + this.calculerSommeAchat() + " CHF");
     }
 
-    public  Vehicule trouveVehiculeMin(){
-        Vehicule min = this.lstVehicules.get(0);
-        for (Vehicule vehicule : this.lstVehicules) {
-            if(vehicule.getKmAuCompteur() < min.getKmAuCompteur()){
-                min = vehicule;
+
+    /**************** 4 ****************/
+//    public void calculerLigneUtiliseMaxVehicule() {
+//        for (Vehicule v: lstVehicules) {
+//
+//        }
+//    }
+
+    /**************** 5 ****************/
+    public ArrayList<Vehicule> getVehiculesAbove300(){
+        ArrayList<Vehicule> lst300 = new ArrayList<Vehicule>();
+
+        for (Vehicule v : lstVehicules) {
+            if (v.getKmAuCompteur() > 300000) {
+                lst300.add(v);
             }
         }
-        return min;
+        return lst300;
     }
 
-    public void afficherVehiculeMin(){
-        System.out.println("Le véhicule avec le moins de kil est " + this.trouveVehiculeMin());
+    /**************** 5 ****************/
+    public void afficherVehiculesAbove300() {
+        for (Vehicule v: getVehiculesAbove300()) {
+            System.out.println(v);
+        }
+    }
+
+    /**************** 6 ****************/
+    public Vehicule getVehiculeMoinsKm(){
+        Vehicule vehiculeMoinsKm = lstVehicules.get(0);
+
+        for (Vehicule v : lstVehicules) {
+            if (v.getKmAuCompteur() < vehiculeMoinsKm.getKmAuCompteur()) {
+                vehiculeMoinsKm = v;
+            }
+        }
+        return vehiculeMoinsKm;
+    }
+
+    /**************** 6 ****************/
+    public void afficherVehiculeMoinsKm() {
+        System.out.println("Le véhicule qui a le moins de kilomètres est " + getVehiculeMoinsKm());
     }
 
     public void afficherLignes() {

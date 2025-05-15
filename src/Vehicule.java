@@ -42,6 +42,6 @@ public class Vehicule
     @Override
     public String toString()
     {
-        return String.format("Véhicule (prix: CHF %d, nb. passagers max: %d) de type: ", prixAchat, nbPassagersMax);
+        return String.format("Véhicule (prix: CHF %d, nb. passagers max: %d) de %d km", prixAchat, nbPassagersMax, kmAuCompteur);
     }
 }
