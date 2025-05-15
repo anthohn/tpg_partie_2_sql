@@ -7,9 +7,19 @@ public class TestLignes {
 
     public static void main(String[] args) {
         GestionTPG gtp = new GestionTPG();
-        System.out.println(gtp);
+        //System.out.println(gtp);
+//        gtp.afficherSommeAchat();
+//        gtp.afficherVehiculeMin();
+        //gtp.lstLignes();
+
+        // affichage lignes
+        gtp.afficherLignes();
+
+        /**************** 2 ****************/
+        gtp.nbBusTrolleys();
+
+        /**************** 3 ****************/
         gtp.afficherSommeAchat();
-        gtp.afficherVehiculeMin();
 
         System.out.println("-----------------------------------");
     }

@@ -5,11 +5,30 @@ import java.util.ArrayList;
 
 public class GestionTPG {
     ArrayList<Vehicule> lstVehicules;
+    ArrayList<Ligne> lstLignes;
 
     public GestionTPG() {
-        this.lstVehicules = lireDonnees();
+        this.lstVehicules = lireVehicules();
+        this.lstLignes = lireLignes();
     }
 
+    /**************** 2 ****************/
+    public void nbBusTrolleys() {
+        int cptBus = 0;
+        int cptTrolleys = 0;
+
+        for (Vehicule v: lstVehicules) {
+            if (v instanceof Bus) {
+                cptBus++;
+            } else if (v instanceof Trolley) {
+                cptTrolleys++;
+            }
+        }
+        System.out.println("Il y'a " + cptBus + " bus");
+        System.out.println("Il y'a " + cptTrolleys + " trolleys");
+    }
+
+    /**************** 3 ****************/
     public int calculerSommeAchat() {
         int somme = 0;
         for (Vehicule vehicule : this.lstVehicules) {
@@ -18,8 +37,9 @@ public class GestionTPG {
         return somme ;
     }
 
+    /**************** 3 ****************/
     public void afficherSommeAchat() {
-        System.out.println("Le total de prix d'achat est : " + this.calculerSommeAchat());
+        System.out.println("Le total de prix d'achat est : " + this.calculerSommeAchat() + " CHF");
     }
 
     public  Vehicule trouveVehiculeMin(){
@@ -36,7 +56,13 @@ public class GestionTPG {
         System.out.println("Le véhicule avec le moins de kil est " + this.trouveVehiculeMin());
     }
 
-    public  ArrayList<Vehicule> lireDonnees() {
+    public void afficherLignes() {
+        for (Ligne l: this.lstLignes) {
+            System.out.println(l);
+        }
+    }
+
+    public  ArrayList<Vehicule> lireVehicules() {
         String url = "jdbc:sqlite:tpg.sqlite";
         ArrayList<Vehicule> lstVehiculeDB = new ArrayList<>();
 
@@ -81,12 +107,49 @@ public class GestionTPG {
         return lstVehiculeDB;
     }
 
-    @Override
-    public String toString() {
-        String affichage = "";
-        for (Vehicule v : this.lstVehicules) {
-            affichage += v + "\n";
+    public  ArrayList<Ligne> lireLignes() {
+        String url = "jdbc:sqlite:tpg.sqlite";
+        ArrayList<Ligne> lstLignesDB = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(url)) {
+            String queryLignes = "SELECT * FROM lignes";
+            try (PreparedStatement stmtLignes = conn.prepareStatement(queryLignes)) {
+                try (ResultSet rsLignes = stmtLignes.executeQuery()) {
+                    while (rsLignes.next()) {
+
+                        int idLigne = rsLignes.getInt("id");
+                        int accepteTrolley = rsLignes.getInt("accepte_trolley");
+                        String nomLigne = rsLignes.getString("id");
+                        int tensionNecessaire = rsLignes.getInt("tension_necessaire");
+                        boolean boolAccepteTrolley = false ;
+                        if (accepteTrolley == 1) {
+                            boolAccepteTrolley = true;
+                        }
+
+                        ArrayList<String> lstArrets = new ArrayList<>();
+                        ArrayList<Integer> listDureeEntreArrets = new ArrayList<>();
+                        String selectLigne = "SELECT * from arrets JOIN ligne_arret ON arrets.id = ligne_arret.arret_id WHERE ligne_id = " + idLigne;
+
+                        try (PreparedStatement stmtLignes2 = conn.prepareStatement(selectLigne)) {
+                            try (ResultSet rsLignes2 = stmtLignes2.executeQuery()) {
+                                while (rsLignes2.next()) {
+                                    String nomArret = rsLignes2.getString("nom");
+                                    int minutes = rsLignes2.getInt("minutes");
+
+                                    lstArrets.add(nomArret);
+                                    listDureeEntreArrets.add(minutes);
+                                }
+                            }
+                        }
+
+                        Ligne l =  new Ligne(nomLigne, lstArrets, listDureeEntreArrets, boolAccepteTrolley, tensionNecessaire);
+                        lstLignesDB.add(l);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return affichage;
+        return lstLignesDB;
     }
 }
